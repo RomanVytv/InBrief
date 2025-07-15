@@ -53,11 +53,19 @@ class SummaryViewModel : ViewModel(), KoinComponent {
 
     // Player actions
     fun nextChapter() {
-
+        _chaptersUiState.value =
+            _chaptersUiState.value.copy(
+                currentChapterId = _chaptersUiState.value.currentChapterId.inc()
+                    .coerceAtMost(_chaptersUiState.value.chapters.size)
+            )
     }
 
     fun previousChapter() {
-
+        _chaptersUiState.value =
+            _chaptersUiState.value.copy(
+                currentChapterId = _chaptersUiState.value.currentChapterId.dec()
+                    .coerceAtLeast(0)
+            )
     }
 
     fun playPause() {

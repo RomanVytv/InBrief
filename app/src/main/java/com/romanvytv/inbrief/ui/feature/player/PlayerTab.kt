@@ -81,8 +81,8 @@ fun ListenTab(
             onPlayPause = { viewModel.playPause() },
             onRewind = { viewModel.rewind() },
             onFastForward = { viewModel.fastForward() },
-            onPrevious = {},
-            onNext = {}
+            onPrevious = { viewModel.previousChapter() },
+            onNext = { viewModel.nextChapter() }
         )
     }
 }
