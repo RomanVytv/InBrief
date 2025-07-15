@@ -1,4 +1,4 @@
-package com.romanvytv.inbrief.feature.player
+package com.romanvytv.inbrief.ui.feature.player
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

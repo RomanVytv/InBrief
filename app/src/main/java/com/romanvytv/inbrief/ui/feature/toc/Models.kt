@@ -1,4 +1,4 @@
-package com.romanvytv.inbrief.feature.toc
+package com.romanvytv.inbrief.ui.feature.toc
 
 data class Chapter(
     val id: String,

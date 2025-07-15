@@ -1,4 +1,4 @@
-package com.romanvytv.inbrief.feature.toc
+package com.romanvytv.inbrief.ui.feature.toc
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize

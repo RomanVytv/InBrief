@@ -1,4 +1,4 @@
-package com.romanvytv.inbrief.feature.player
+package com.romanvytv.inbrief.ui.feature.player
 
 data class PlayerUiState(
     val coverUrl: String = "",
