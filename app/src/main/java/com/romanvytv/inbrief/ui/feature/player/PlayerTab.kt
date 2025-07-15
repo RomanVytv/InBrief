@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
@@ -23,16 +24,17 @@ import com.romanvytv.inbrief.ui.components.SeekBar
 import androidx.compose.ui.tooling.preview.Preview
 import com.romanvytv.inbrief.ui.theme.InBriefTheme
 import com.romanvytv.inbrief.ui.theme.backgroundColor
+import org.koin.androidx.compose.koinViewModel
+import androidx.compose.runtime.collectAsState
+import com.romanvytv.inbrief.ui.feature.SummaryViewModel
 
 @Composable
 fun ListenTab(
-    uiState: PlayerUiState,
-    onPlayPause: () -> Unit,
-    onSeek: (Float) -> Unit,
-    onRewind: () -> Unit,
-    onFastForward: () -> Unit,
+    viewModel: SummaryViewModel = koinViewModel(),
     modifier: Modifier = Modifier
 ) {
+    val uiState by viewModel.playerUiState.collectAsState()
+
     Column(
         modifier = modifier
             .background(backgroundColor)
@@ -42,7 +44,7 @@ fun ListenTab(
         verticalArrangement = Arrangement.Bottom
     ) {
 
-        CoverArt(uiState.coverUrl)
+        CoverArt(uiState.coverPath)
 
         Spacer(Modifier.height(32.dp))
 
@@ -51,7 +53,7 @@ fun ListenTab(
         Spacer(Modifier.height(8.dp))
 
         Text(
-            text = uiState.title,
+            text = uiState.currentKeyPointText,
             style = MaterialTheme.typography.titleMedium,
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth()
@@ -62,7 +64,7 @@ fun ListenTab(
         SeekBar(
             progressSeconds = uiState.progress,
             durationSeconds = uiState.duration,
-            onSeek = onSeek
+            onSeek = { viewModel.seek(it) }
         )
 
         Spacer(Modifier.height(40.dp))
@@ -73,9 +75,9 @@ fun ListenTab(
 
         PlayerControls(
             isPlaying = uiState.isPlaying,
-            onPlayPause = onPlayPause,
-            onRewind = onRewind,
-            onFastForward = onFastForward,
+            onPlayPause = { viewModel.playPause() },
+            onRewind = { viewModel.rewind() },
+            onFastForward = { viewModel.fastForward() },
             onPrevious = {},
             onNext = {}
         )
@@ -86,22 +88,7 @@ fun ListenTab(
 @Composable
 fun ListenTabPreview() {
     InBriefTheme {
-        ListenTab(
-            uiState = PlayerUiState(
-                coverUrl = "",
-                title = "Sample Title",
-                currentKeyPoint = 2,
-                totalKeyPoints = 5,
-                progress = 5,
-                duration = 120,
-                playbackSpeed = 1.25f,
-                isPlaying = false
-            ),
-            onPlayPause = {},
-            onSeek = {},
-            onRewind = {},
-            onFastForward = {}
-        )
+        ListenTab()
     }
 }
 

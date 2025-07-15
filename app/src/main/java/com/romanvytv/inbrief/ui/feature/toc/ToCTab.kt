@@ -11,7 +11,6 @@ import com.romanvytv.inbrief.ui.theme.InBriefTheme
 
 @Composable
 fun ToCTab(
-    onChapterSelect: (Chapter) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -29,7 +28,6 @@ fun ToCTab(
 fun ToCTabPreview() {
     InBriefTheme {
         ToCTab(
-            onChapterSelect = {},
             modifier = Modifier
         )
     }

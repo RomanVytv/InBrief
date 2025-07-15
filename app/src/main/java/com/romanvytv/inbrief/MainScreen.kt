@@ -31,9 +31,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.romanvytv.inbrief.ui.feature.player.ListenTab
-import com.romanvytv.inbrief.ui.feature.player.PlayerUiState
-import com.romanvytv.inbrief.ui.feature.toc.Chapter
-import com.romanvytv.inbrief.ui.feature.toc.ChaptersUiState
 import com.romanvytv.inbrief.ui.feature.toc.ToCTab
 import com.romanvytv.inbrief.ui.pxToDp
 import com.romanvytv.inbrief.ui.theme.InBriefTheme
@@ -94,27 +91,8 @@ fun MainScreen() {
                 .padding(innerPadding)
         ) {
             when (selectedTab) {
-                0 -> ListenTab(
-                    uiState = PlayerUiState(
-                        coverUrl = "",
-                        title = "Sample Title",
-                        currentKeyPoint = 2,
-                        totalKeyPoints = 5,
-                        progress = 50,
-                        duration = 120,
-                        playbackSpeed = 1.25f,
-                        isPlaying = false
-                    ),
-                    onPlayPause = {},
-                    onSeek = {},
-                    onRewind = {},
-                    onFastForward = {}
-                )
-
-                1 -> ToCTab(
-                    onChapterSelect = {},
-                    modifier = Modifier
-                )
+                0 -> ListenTab(modifier = Modifier)
+                1 -> ToCTab(modifier = Modifier)
             }
         }
     }
