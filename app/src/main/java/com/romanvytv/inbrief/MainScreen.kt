@@ -31,7 +31,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.romanvytv.inbrief.ui.feature.player.ListenTab
-import com.romanvytv.inbrief.ui.feature.toc.ToCTab
+import com.romanvytv.inbrief.ui.feature.toc.ChapterTab
 import com.romanvytv.inbrief.ui.pxToDp
 import com.romanvytv.inbrief.ui.theme.InBriefTheme
 import com.romanvytv.inbrief.ui.theme.backgroundColor
@@ -92,7 +92,7 @@ fun MainScreen() {
         ) {
             when (selectedTab) {
                 0 -> ListenTab(modifier = Modifier)
-                1 -> ToCTab(modifier = Modifier)
+                1 -> ChapterTab(modifier = Modifier)
             }
         }
     }

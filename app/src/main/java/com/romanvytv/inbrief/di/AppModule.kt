@@ -6,7 +6,6 @@ import com.romanvytv.inbrief.ui.feature.SummaryViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
-import com.romanvytv.inbrief.INTELLIGENT_INVESTOR_PATH
 
 val appModule = module {
     single<IBookSummaryRepository> { BookSummaryRepository(androidContext()) }

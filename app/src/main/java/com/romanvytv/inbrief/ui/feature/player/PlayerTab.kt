@@ -11,29 +11,32 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.romanvytv.inbrief.ui.components.CoverArt
 import com.romanvytv.inbrief.ui.components.KeyPointHeader
 import com.romanvytv.inbrief.ui.components.PlayerControls
-import com.romanvytv.inbrief.ui.components.SpeedChip
 import com.romanvytv.inbrief.ui.components.SeekBar
-import androidx.compose.ui.tooling.preview.Preview
+import com.romanvytv.inbrief.ui.components.SpeedChip
+import com.romanvytv.inbrief.ui.feature.SummaryViewModel
 import com.romanvytv.inbrief.ui.theme.InBriefTheme
 import com.romanvytv.inbrief.ui.theme.backgroundColor
 import org.koin.androidx.compose.koinViewModel
-import androidx.compose.runtime.collectAsState
-import com.romanvytv.inbrief.ui.feature.SummaryViewModel
 
 @Composable
 fun ListenTab(
-    viewModel: SummaryViewModel = koinViewModel(),
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: SummaryViewModel = koinViewModel()
 ) {
-    val uiState by viewModel.playerUiState.collectAsState()
+    val playerUiState by viewModel.playerUiState.collectAsState()
+    val chaptersUiState by viewModel.chaptersUiState.collectAsState()
+
+    val currentChapter = chaptersUiState.getCurrentChapter()
 
     Column(
         modifier = modifier
@@ -44,16 +47,16 @@ fun ListenTab(
         verticalArrangement = Arrangement.Bottom
     ) {
 
-        CoverArt(uiState.coverPath)
+        CoverArt(playerUiState.coverPath)
 
         Spacer(Modifier.height(32.dp))
 
-        KeyPointHeader(current = uiState.currentKeyPoint, total = uiState.totalKeyPoints)
+        KeyPointHeader(current = currentChapter.number, total = chaptersUiState.chapters.size)
 
         Spacer(Modifier.height(8.dp))
 
         Text(
-            text = uiState.currentKeyPointText,
+            text = chaptersUiState.getCurrentChapter().keyTakeaway,
             style = MaterialTheme.typography.titleMedium,
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth()
@@ -62,19 +65,19 @@ fun ListenTab(
         Spacer(Modifier.height(40.dp))
 
         SeekBar(
-            progressSeconds = uiState.progress,
-            durationSeconds = uiState.duration,
+            progressSeconds = playerUiState.progress,
+            durationSeconds = chaptersUiState.getCurrentChapter().duration,
             onSeek = { viewModel.seek(it) }
         )
 
         Spacer(Modifier.height(40.dp))
 
-        SpeedChip(speed = uiState.playbackSpeed)
+        SpeedChip(speed = playerUiState.playbackSpeed)
 
         Spacer(Modifier.height(40.dp))
 
         PlayerControls(
-            isPlaying = uiState.isPlaying,
+            isPlaying = playerUiState.isPlaying,
             onPlayPause = { viewModel.playPause() },
             onRewind = { viewModel.rewind() },
             onFastForward = { viewModel.fastForward() },
