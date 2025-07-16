@@ -41,7 +41,7 @@ class MediaPlayerService : Service() {
     private val controller = object : MediaPlayerController {
         override fun play() = mediaSession.controller.transportControls.play()
         override fun pause() = mediaSession.controller.transportControls.pause()
-        override fun stop() = stopSelf()
+        override fun stop() = { }
         override fun prepare(path: String) = prepareAudio(path)
         override fun setSpeed(speed: Float) = setPlaybackSpeed(speed)
         override fun seekTo(seconds: Int) = this@MediaPlayerService.seekTo(seconds)
@@ -117,7 +117,12 @@ class MediaPlayerService : Service() {
     }
 
     private fun setPlaybackSpeed(speed: Float) {
-        mediaPlayer?.let { it.playbackParams = it.playbackParams.setSpeed(speed) }
+        val wasPlaying = mediaPlayer?.isPlaying == true
+        mediaPlayer?.let { player ->
+            player.playbackParams = player.playbackParams.setSpeed(speed)
+            if (!wasPlaying) player.pause()
+        }
+
     }
 
     private fun play() {
@@ -138,7 +143,12 @@ class MediaPlayerService : Service() {
 
     private fun seekTo(seconds: Int) {
         mediaPlayer?.let { player ->
-            player.seekTo((player.currentPosition + seconds * 1000).coerceIn(0, player.duration))
+            Log.d(TAG, "seekTo - $seconds")
+            player.seekTo((seconds * 1000).coerceIn(0, player.duration))
+            val isPlaying = mediaPlayer?.isPlaying == true
+            if (!isPlaying) {
+                _playbackPosition.update { mediaPlayer?.currentPosition ?: 0 }
+            }
         }
     }
 

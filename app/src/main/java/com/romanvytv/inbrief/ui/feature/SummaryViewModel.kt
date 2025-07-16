@@ -99,6 +99,9 @@ class SummaryViewModel : ViewModel(), KoinComponent {
             ) { audioName, isConnected -> audioName to isConnected }
                 .filter { (_, isConnected) -> isConnected }
                 .collect { (audioName, _) ->
+                    stop()
+                    _playerUiState.update { it.copy(progress = 0) }
+
                     val audioPath = "$bookSummaryPath/$audioName"
                     Log.d(TAG, "Preparing audio: $audioPath")
                     mediaServiceConnection.prepare(audioPath)
@@ -156,7 +159,6 @@ class SummaryViewModel : ViewModel(), KoinComponent {
 
     fun rewind() {
         val newProgress = (_playerUiState.value.progress - SEEK_BACKWARD_SECONDS).coerceAtLeast(0)
-        _playerUiState.update { it.copy(progress = newProgress) }
         mediaServiceConnection.seekTo(newProgress)
     }
 
@@ -164,7 +166,6 @@ class SummaryViewModel : ViewModel(), KoinComponent {
         val maxProgress = _playerUiState.value.duration
         val newProgress =
             (_playerUiState.value.progress + SEEK_FORWARD_SECONDS).coerceAtMost(maxProgress)
-        _playerUiState.update { it.copy(progress = newProgress) }
         mediaServiceConnection.seekTo(newProgress)
     }
 
@@ -181,6 +182,10 @@ class SummaryViewModel : ViewModel(), KoinComponent {
     // region Chapter navigation
 
     fun nextChapter() {
+        if (_chaptersUiState.value.currentChapterId == _chaptersUiState.value.chapters.size) {
+            return
+        }
+
         stop()
         _chaptersUiState.update { state ->
             val nextId = state.currentChapterId.inc().coerceAtMost(state.chapters.size)
@@ -189,6 +194,10 @@ class SummaryViewModel : ViewModel(), KoinComponent {
     }
 
     fun previousChapter() {
+        if (_chaptersUiState.value.currentChapterId == 1) {
+            return
+        }
+
         stop()
         _chaptersUiState.update { state ->
             val prevId = state.currentChapterId.dec().coerceAtLeast(1)

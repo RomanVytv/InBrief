@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.StateFlow
 interface MediaPlayerController {
     fun play()
     fun pause()
-    fun stop()
+    fun stop(): () -> Unit
     fun prepare(path: String)
     fun setSpeed(speed: Float)
     fun seekTo(seconds: Int)

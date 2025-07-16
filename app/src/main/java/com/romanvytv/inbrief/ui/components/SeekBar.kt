@@ -21,6 +21,7 @@ fun SeekBar(
     onSeek: (Int) -> Unit
 ) {
     val progress = progressSeconds.toFloat() / durationSeconds.coerceAtLeast(1)
+    var newProgress = 0f
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -33,7 +34,8 @@ fun SeekBar(
 
         Slider(
             value = progress,
-            onValueChange = { onSeek((it * durationSeconds).toInt()) },
+            onValueChange = { newProgress = it },
+            onValueChangeFinished = { onSeek((newProgress * durationSeconds).toInt()) },
             modifier = Modifier
                 .weight(1f)
                 .padding(horizontal = 8.dp),
