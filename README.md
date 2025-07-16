@@ -3,7 +3,7 @@
 Small Android app to listen to audio summaries of books.  
 Currently features the book: **The Intelligent Investor**.
 
-![App Screenshot](./Screenshot_1.png)
+<img src="./Screenshot_1.png" alt="App Screenshot" width="300" />
 ---
 
 ## ✨ Features
