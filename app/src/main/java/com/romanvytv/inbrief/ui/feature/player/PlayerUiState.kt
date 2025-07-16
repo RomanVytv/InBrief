@@ -5,6 +5,6 @@ data class PlayerUiState(
     val title: String = "",
     val progress: Int = 0,
     val duration: Int = 0,
-    val playbackSpeed: Float = 1f,
+    val playbackSpeed: PlaybackSpeed = PlaybackSpeed.DEFAULT,
     val isPlaying: Boolean = false
 )

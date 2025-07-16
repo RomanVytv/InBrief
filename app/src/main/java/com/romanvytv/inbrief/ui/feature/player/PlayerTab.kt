@@ -72,7 +72,10 @@ fun ListenTab(
 
         Spacer(Modifier.height(40.dp))
 
-        SpeedChip(speed = playerUiState.playbackSpeed)
+        SpeedChip(
+            onClick = { viewModel.changePlaybackSpeed() },
+            speed = playerUiState.playbackSpeed.speed
+        )
 
         Spacer(Modifier.height(40.dp))
 

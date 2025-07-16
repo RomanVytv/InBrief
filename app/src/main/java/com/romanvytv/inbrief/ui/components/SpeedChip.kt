@@ -11,12 +11,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.romanvytv.inbrief.ui.theme.backgroundColorDark
-import com.romanvytv.inbrief.ui.theme.textColor
 
 @Composable
-fun SpeedChip(speed: Float, modifier: Modifier = Modifier) {
+fun SpeedChip(
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit,
+    speed: Float
+) {
     Surface(
         modifier = modifier,
+        onClick = onClick,
         shape = RoundedCornerShape(8.dp),
         color = backgroundColorDark
     ) {
@@ -32,5 +36,5 @@ fun SpeedChip(speed: Float, modifier: Modifier = Modifier) {
 @Preview(showBackground = true)
 @Composable
 fun SpeedChipPreview() {
-    SpeedChip(speed = 1.5f)
+    SpeedChip(speed = 1.5f, onClick = {})
 }

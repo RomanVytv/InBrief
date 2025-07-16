@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 fun SeekBar(
     progressSeconds: Int,
     durationSeconds: Int,
-    onSeek: (Float) -> Unit
+    onSeek: (Int) -> Unit
 ) {
     val progress = progressSeconds.toFloat() / durationSeconds.coerceAtLeast(1)
 
@@ -27,13 +27,13 @@ fun SeekBar(
         modifier = Modifier.fillMaxWidth()
     ) {
         Text(
-            text = formatTime(progressSeconds),
+            text = formatTime(progressSeconds.coerceIn(0, durationSeconds)),
             style = MaterialTheme.typography.labelSmall
         )
 
         Slider(
             value = progress,
-            onValueChange = { onSeek(it) },
+            onValueChange = { onSeek((it * durationSeconds).toInt()) },
             modifier = Modifier
                 .weight(1f)
                 .padding(horizontal = 8.dp),

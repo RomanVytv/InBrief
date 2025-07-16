@@ -53,6 +53,7 @@ dependencies {
     implementation(libs.gson)
     implementation(libs.koin.android)
     implementation(libs.koin.androidx.compose)
+    implementation(libs.androidx.media)
 
     testImplementation(libs.junit)
 
