@@ -18,6 +18,9 @@ class MediaPlayerServiceConnection(val context: Context) : ServiceConnection {
     val playbackPosition: StateFlow<Int>
         get() = controller?.playbackPosition ?: MutableStateFlow(0)
 
+    val audioCompleted: StateFlow<Boolean>
+        get() = controller?.audioCompleted ?: MutableStateFlow(false)
+
     override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
         val binder = service as? MediaPlayerService.MediaPlayerBinder
         controller = binder?.getController()
@@ -40,7 +43,6 @@ class MediaPlayerServiceConnection(val context: Context) : ServiceConnection {
 
     fun play() = controller?.play()
     fun pause() = controller?.pause()
-    fun stop() = controller?.stop()
     fun prepare(path: String) = controller?.prepare(path)
     fun setSpeed(speed: Float) = controller?.setSpeed(speed)
     fun seekTo(seconds: Int) = controller?.seekTo(seconds)

@@ -31,7 +31,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.romanvytv.inbrief.ui.feature.player.ListenTab
-import com.romanvytv.inbrief.ui.feature.toc.ChapterTab
+import com.romanvytv.inbrief.ui.feature.chapters.ChapterTab
 import com.romanvytv.inbrief.ui.pxToDp
 import com.romanvytv.inbrief.ui.theme.InBriefTheme
 import com.romanvytv.inbrief.ui.theme.backgroundColor

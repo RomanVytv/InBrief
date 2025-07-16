@@ -1,4 +1,4 @@
-package com.romanvytv.inbrief.ui.feature.toc
+package com.romanvytv.inbrief.ui.feature.chapters
 
 import com.romanvytv.inbrief.data.entity.Chapter
 

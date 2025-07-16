@@ -3,10 +3,8 @@ package com.romanvytv.inbrief.ui.feature.player
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -35,7 +33,6 @@ fun ListenTab(
 ) {
     val playerUiState by viewModel.playerUiState.collectAsState()
     val chaptersUiState by viewModel.chaptersUiState.collectAsState()
-
     val currentChapter = chaptersUiState.getCurrentChapter()
 
     Column(
@@ -44,51 +41,41 @@ fun ListenTab(
             .fillMaxSize()
             .padding(horizontal = 24.dp, vertical = 24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Bottom
+        verticalArrangement = Arrangement.spacedBy(40.dp, Alignment.Bottom)
     ) {
-
         CoverArt(playerUiState.coverPath)
-
-        Spacer(Modifier.height(32.dp))
 
         KeyPointHeader(current = currentChapter.number, total = chaptersUiState.chapters.size)
 
-        Spacer(Modifier.height(8.dp))
-
         Text(
-            text = chaptersUiState.getCurrentChapter().keyTakeaway,
+            text = currentChapter.keyTakeaway,
             style = MaterialTheme.typography.titleMedium,
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth()
         )
 
-        Spacer(Modifier.height(40.dp))
-
         SeekBar(
             progressSeconds = playerUiState.progress,
-            durationSeconds = chaptersUiState.getCurrentChapter().duration,
-            onSeek = { viewModel.seek(it) }
+            durationSeconds = currentChapter.duration,
+            onSeek = viewModel::seek
         )
 
-        Spacer(Modifier.height(40.dp))
-
         SpeedChip(
-            onClick = { viewModel.changePlaybackSpeed() },
+            onClick = viewModel::changePlaybackSpeed,
             speed = playerUiState.playbackSpeed.speed
         )
 
-        Spacer(Modifier.height(40.dp))
-
         PlayerControls(
             isPlaying = playerUiState.isPlaying,
-            onPlayPause = { viewModel.playPause() },
-            onRewind = { viewModel.rewind() },
-            onFastForward = { viewModel.fastForward() },
-            onPrevious = { viewModel.previousChapter() },
-            onNext = { viewModel.nextChapter() }
+            onPlayPause = viewModel::playPause,
+            onRewind = viewModel::rewind,
+            onFastForward = viewModel::fastForward,
+            onPrevious = viewModel::previousChapter,
+            onNext = viewModel::nextChapter
         )
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable

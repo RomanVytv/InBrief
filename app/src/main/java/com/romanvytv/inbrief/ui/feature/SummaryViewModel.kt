@@ -8,7 +8,7 @@ import com.romanvytv.inbrief.INTELLIGENT_INVESTOR_PATH
 import com.romanvytv.inbrief.data.repo.IBookSummaryRepository
 import com.romanvytv.inbrief.service.MediaPlayerServiceConnection
 import com.romanvytv.inbrief.ui.feature.player.PlayerUiState
-import com.romanvytv.inbrief.ui.feature.toc.ChaptersUiState
+import com.romanvytv.inbrief.ui.feature.chapters.ChaptersUiState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -56,6 +56,7 @@ class SummaryViewModel : ViewModel(), KoinComponent {
         mediaServiceConnection.connect()
 
         observeMediaServiceConnection()
+        observeAudioCompletion()
         observePlaybackPosition()
         observeChapterChanges()
     }
@@ -87,6 +88,18 @@ class SummaryViewModel : ViewModel(), KoinComponent {
                 .map { millis -> (millis / 1000.0).roundToInt() }
                 .collect { seconds ->
                     _playerUiState.update { it.copy(progress = seconds) }
+                }
+        }
+    }
+
+    private fun observeAudioCompletion() {
+        viewModelScope.launch {
+            mediaServiceConnection.isConnected
+                .flatMapLatest { connected ->
+                    if (connected) mediaServiceConnection.audioCompleted else emptyFlow()
+                }.collect { completed ->
+                    if (completed)
+                        _playerUiState.update { it.copy(progress = 0, isPlaying = false) }
                 }
         }
     }
@@ -147,7 +160,6 @@ class SummaryViewModel : ViewModel(), KoinComponent {
 
     fun stop() {
         _playerUiState.update { state ->
-            if (state.isPlaying) mediaServiceConnection.stop()
             state.copy(isPlaying = false)
         }
     }

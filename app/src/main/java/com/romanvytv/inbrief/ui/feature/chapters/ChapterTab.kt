@@ -1,4 +1,4 @@
-package com.romanvytv.inbrief.ui.feature.toc
+package com.romanvytv.inbrief.ui.feature.chapters
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background

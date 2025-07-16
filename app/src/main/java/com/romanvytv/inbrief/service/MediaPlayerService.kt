@@ -31,6 +31,7 @@ class MediaPlayerService : Service() {
     private var positionJob: Job? = null
 
     private val _playbackPosition = MutableStateFlow(0)
+    private val _audioCompleted = MutableStateFlow(false)
 
     // region Binder & Controller
 
@@ -41,12 +42,12 @@ class MediaPlayerService : Service() {
     private val controller = object : MediaPlayerController {
         override fun play() = mediaSession.controller.transportControls.play()
         override fun pause() = mediaSession.controller.transportControls.pause()
-        override fun stop() = { }
         override fun prepare(path: String) = prepareAudio(path)
         override fun setSpeed(speed: Float) = setPlaybackSpeed(speed)
         override fun seekTo(seconds: Int) = this@MediaPlayerService.seekTo(seconds)
 
         override val playbackPosition: StateFlow<Int> = _playbackPosition
+        override val audioCompleted: StateFlow<Boolean> = _audioCompleted
     }
 
     // endregion
@@ -107,7 +108,10 @@ class MediaPlayerService : Service() {
             setOnPreparedListener {
                 Log.d(TAG, "OnPreparedListener | path=$path")
             }
-            setOnCompletionListener { stopSelf() }
+            setOnCompletionListener { _audioCompleted.update {
+                Log.d(TAG, "setOnCompletionListener triggered")
+                true
+            } }
             setOnErrorListener { _, what, _ ->
                 Log.e(TAG, "OnErrorListener triggered with - $what")
                 stopSelf()
