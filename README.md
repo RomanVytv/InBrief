@@ -17,8 +17,6 @@ Currently features the book: **The Intelligent Investor**.
 
 ## 🧪 Testing
 - Unit tests are located in `src/test/`.
-- Currently, tests are under development and **do not pass**.
-- Work is happening on a separate branch: `/tests`.
 
 ---
 
