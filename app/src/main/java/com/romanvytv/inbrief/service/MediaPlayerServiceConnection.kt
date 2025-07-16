@@ -8,17 +8,18 @@ import android.os.IBinder
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-class MediaPlayerServiceConnection(val context: Context) : ServiceConnection {
+open class MediaPlayerServiceConnection(val context: Context) : ServiceConnection,
+    IMediaPlayerServiceConnection {
 
     private var controller: MediaPlayerController? = null
 
     private val _isConnected = MutableStateFlow(false)
-    val isConnected: StateFlow<Boolean> get() = _isConnected
+    override val isConnected: StateFlow<Boolean> get() = _isConnected
 
-    val playbackPosition: StateFlow<Int>
+    override val playbackPosition: StateFlow<Int>
         get() = controller?.playbackPosition ?: MutableStateFlow(0)
 
-    val audioCompleted: StateFlow<Boolean>
+    override val audioCompleted: StateFlow<Boolean>
         get() = controller?.audioCompleted ?: MutableStateFlow(false)
 
     override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
@@ -32,18 +33,18 @@ class MediaPlayerServiceConnection(val context: Context) : ServiceConnection {
         _isConnected.value = false
     }
 
-    fun connect() {
+    override fun connect() {
         val intent = Intent(context, MediaPlayerService::class.java)
         context.bindService(intent, this, Context.BIND_AUTO_CREATE)
     }
 
-    fun disconnect() {
+    override fun disconnect() {
         context.unbindService(this)
     }
 
-    fun play() = controller?.play()
-    fun pause() = controller?.pause()
-    fun prepare(path: String) = controller?.prepare(path)
-    fun setSpeed(speed: Float) = controller?.setSpeed(speed)
-    fun seekTo(seconds: Int) = controller?.seekTo(seconds)
+    override fun play() = { controller?.play() }
+    override fun pause() = { controller?.pause() }
+    override fun prepare(path: String) = { controller?.prepare(path) }
+    override fun setSpeed(speed: Float) = { controller?.setSpeed(speed) }
+    override fun seekTo(seconds: Int) = { controller?.seekTo(seconds) }
 }

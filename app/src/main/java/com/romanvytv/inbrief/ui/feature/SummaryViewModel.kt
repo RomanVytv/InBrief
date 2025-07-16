@@ -6,9 +6,10 @@ import androidx.lifecycle.viewModelScope
 import com.romanvytv.inbrief.ASSETS_PATH
 import com.romanvytv.inbrief.INTELLIGENT_INVESTOR_PATH
 import com.romanvytv.inbrief.data.repo.IBookSummaryRepository
+import com.romanvytv.inbrief.service.IMediaPlayerServiceConnection
 import com.romanvytv.inbrief.service.MediaPlayerServiceConnection
-import com.romanvytv.inbrief.ui.feature.player.PlayerUiState
 import com.romanvytv.inbrief.ui.feature.chapters.ChaptersUiState
+import com.romanvytv.inbrief.ui.feature.player.PlayerUiState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -25,14 +26,10 @@ import org.koin.core.component.inject
 import kotlin.math.roundToInt
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class SummaryViewModel : ViewModel(), KoinComponent {
-
-    // region Dependencies
-
-    private val repository: IBookSummaryRepository by inject()
-    private val mediaServiceConnection: MediaPlayerServiceConnection by inject()
-
-    // endregion
+class SummaryViewModel(
+    private val repository: IBookSummaryRepository,
+    private val mediaServiceConnection: IMediaPlayerServiceConnection
+) : ViewModel(), KoinComponent {
 
     // region State
 

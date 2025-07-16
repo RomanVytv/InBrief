@@ -149,15 +149,15 @@ fun ChapterTab(
 @Composable
 fun ChaptersTabPreview() {
     InBriefTheme {
-        val sampleChapters = listOf(
-            Chapter(1, "Intro", 120, "Intro text", "Key point 1", "audio1.mp3"),
-            Chapter(2, "Chapter 2", 180, "Chapter 2 text", "Key point 2", "audio2.mp3")
-        )
-        val sampleUiState = ChaptersUiState(
-            chapters = sampleChapters,
-            currentChapterId = 1
-        )
-
-        ChapterTab(viewModel = SummaryViewModel(), sampleUiState = sampleUiState)
+//        val sampleChapters = listOf(
+//            Chapter(1, "Intro", 120, "Intro text", "Key point 1", "audio1.mp3"),
+//            Chapter(2, "Chapter 2", 180, "Chapter 2 text", "Key point 2", "audio2.mp3")
+//        )
+//        val sampleUiState = ChaptersUiState(
+//            chapters = sampleChapters,
+//            currentChapterId = 1
+//        )
+//
+//        ChapterTab(viewModel = SummaryViewModel(), sampleUiState = sampleUiState)
     }
 }

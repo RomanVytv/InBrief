@@ -1,4 +1,4 @@
- package com.romanvytv.inbrief.di
+package com.romanvytv.inbrief.di
 
 import com.romanvytv.inbrief.data.repo.BookSummaryRepository
 import com.romanvytv.inbrief.data.repo.IBookSummaryRepository
@@ -11,5 +11,10 @@ import org.koin.dsl.module
 val appModule = module {
     single<IBookSummaryRepository> { BookSummaryRepository(androidContext()) }
     single<MediaPlayerServiceConnection> { MediaPlayerServiceConnection(androidContext()) }
-    viewModel { SummaryViewModel() }
+    viewModel {
+        SummaryViewModel(
+            repository = get<IBookSummaryRepository>(),
+            mediaServiceConnection = get<MediaPlayerServiceConnection>()
+        )
+    }
 }
