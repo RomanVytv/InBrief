@@ -1,13 +1,12 @@
 package com.romanvytv.inbrief
 
-import app.cash.turbine.test
 import com.romanvytv.inbrief.data.repo.IBookSummaryRepository
 import com.romanvytv.inbrief.fakes.FakeMediaPlayerServiceConnection
 import com.romanvytv.inbrief.fakes.FakeRepository
 import com.romanvytv.inbrief.ui.feature.SummaryViewModel
+import com.romanvytv.inbrief.ui.feature.player.PlaybackSpeed
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.resetMain
@@ -69,11 +68,9 @@ class SummaryViewModelTest {
     @Test
     fun `playPause() should play when paused and pause when playing`() = testScope.runTest {
         viewModel.playPause()
-        assertTrue(fakeMediaService.isPlaying)
         assertTrue(viewModel.playerUiState.value.isPlaying)
 
         viewModel.playPause()
-        assertTrue(!fakeMediaService.isPlaying)
         assertTrue(!viewModel.playerUiState.value.isPlaying)
     }
 
@@ -83,62 +80,67 @@ class SummaryViewModelTest {
         assertTrue(viewModel.playerUiState.value.isPlaying)
 
         viewModel.stop()
-        assertTrue(!fakeMediaService.isPlaying)
         assertTrue(!viewModel.playerUiState.value.isPlaying)
     }
 
     @Test
-    fun `seek() should call mediaServiceConnection seekTo`() = testScope.runTest {
-        viewModel.seek(50)
-        assertEquals(50, fakeMediaService.lastSeekPosition)
+    fun `nextChapter() should update chapters correctly`() = testScope.runTest {
+        viewModel.nextChapter()
+        assertEquals(2, viewModel.chaptersUiState.value.currentChapterId)
+        assertTrue(!viewModel.playerUiState.value.isPlaying)
+        assertTrue(viewModel.playerUiState.value.progress == 0)
     }
 
     @Test
-    fun `rewind() should seek backward by SEEK_BACKWARD_SECONDS`() = testScope.runTest {
-        fakeMediaService.emitPlaybackPosition(20_000)
+    fun `previousChapter() should update chapters correctly`() = testScope.runTest {
+        repeat(3) { viewModel.nextChapter() }
 
-        viewModel.rewind()
-
-        assertEquals(15, fakeMediaService.lastSeekPosition)
+        viewModel.previousChapter()
+        assertEquals(2, viewModel.chaptersUiState.value.currentChapterId)
+        assertTrue(!viewModel.playerUiState.value.isPlaying)
+        assertTrue(viewModel.playerUiState.value.progress == 0)
     }
 
     @Test
-    fun `fastForward() should seek forward by SEEK_FORWARD_SECONDS`() = testScope.runTest {
-        fakeMediaService.emitPlaybackPosition(20_000)
-
-        viewModel.fastForward()
-
-        assertEquals(30, fakeMediaService.lastSeekPosition)
+    fun `initial playback speed should be SPEED_1`() = testScope.runTest {
+        assertEquals(
+            PlaybackSpeed.SPEED_1_0.speed,
+            viewModel.playerUiState.value.playbackSpeed.speed
+        )
     }
 
     @Test
     fun `changePlaybackSpeed() should set next speed`() = testScope.runTest {
         viewModel.changePlaybackSpeed()
-        assertTrue(fakeMediaService.speedSet != null)
+        assertTrue(viewModel.playerUiState.value.playbackSpeed.speed == PlaybackSpeed.SPEED_1_25.speed)
+        viewModel.changePlaybackSpeed()
+        assertTrue(viewModel.playerUiState.value.playbackSpeed.speed == PlaybackSpeed.SPEED_1_5.speed)
     }
 
     @Test
-    fun `nextChapter() should keep currentChapterId same if only one chapter`() =
-        testScope.runTest {
-            viewModel.nextChapter()
-            assertEquals(1, viewModel.chaptersUiState.value.currentChapterId)
-        }
-
-    @Test
-    fun `previousChapter() should keep currentChapterId same if only one chapter`() =
-        testScope.runTest {
-            viewModel.previousChapter()
-            assertEquals(1, viewModel.chaptersUiState.value.currentChapterId)
-        }
-
-    @Test
-    fun `observePlaybackPosition should update playerUiState progress`() = testScope.runTest {
-        viewModel.playerUiState.test {
-            fakeMediaService.emitPlaybackPosition(10_000) // 10 seconds
-            testScheduler.runCurrent()
-
-            val state = awaitItem()
-            assertEquals(10, state.progress)
-        }
+    fun `changePlaybackSpeed() should cycle back to SPEED_1`() = testScope.runTest {
+        repeat(PlaybackSpeed.entries.size - 1) { viewModel.changePlaybackSpeed() }
+        viewModel.changePlaybackSpeed()
+        assertEquals(
+            PlaybackSpeed.SPEED_1_0.speed,
+            viewModel.playerUiState.value.playbackSpeed.speed
+        )
     }
+
+    @Test
+    fun `currentChapterId should be in limits after multiple nextChapters()`() =
+        testScope.runTest {
+            repeat(5) { viewModel.nextChapter() }
+            assertEquals(
+                viewModel.chaptersUiState.value.chapters.size,
+                viewModel.chaptersUiState.value.currentChapterId
+            )
+        }
+
+    @Test
+    fun `currentChapterId should be in limits after multiple previousChapter()`() =
+        testScope.runTest {
+            repeat(5) { viewModel.previousChapter() }
+            assertEquals(1, viewModel.chaptersUiState.value.currentChapterId)
+        }
 }

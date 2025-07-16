@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.StateFlow
 open class MediaPlayerServiceConnection(val context: Context) : ServiceConnection,
     IMediaPlayerServiceConnection {
 
-    private var controller: MediaPlayerController? = null
+    override var controller: MediaPlayerController? = null
 
     private val _isConnected = MutableStateFlow(false)
     override val isConnected: StateFlow<Boolean> get() = _isConnected
@@ -42,9 +42,23 @@ open class MediaPlayerServiceConnection(val context: Context) : ServiceConnectio
         context.unbindService(this)
     }
 
-    override fun play() = { controller?.play() }
-    override fun pause() = { controller?.pause() }
-    override fun prepare(path: String) = { controller?.prepare(path) }
-    override fun setSpeed(speed: Float) = { controller?.setSpeed(speed) }
-    override fun seekTo(seconds: Int) = { controller?.seekTo(seconds) }
+    override fun play() {
+        controller?.play()
+    }
+
+    override fun pause() {
+        controller?.pause()
+    }
+
+    override fun prepare(path: String) {
+        controller?.prepare(path)
+    }
+
+    override fun setSpeed(speed: Float) {
+        controller?.setSpeed(speed)
+    }
+
+    override fun seekTo(seconds: Int) {
+        controller?.seekTo(seconds)
+    }
 }

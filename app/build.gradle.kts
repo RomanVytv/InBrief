@@ -55,6 +55,7 @@ dependencies {
     implementation(libs.koin.androidx.compose)
     implementation(libs.androidx.media)
 
+    testImplementation(libs.robolectric)
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.app.cash.turbine)

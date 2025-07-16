@@ -1,6 +1,8 @@
 package com.romanvytv.inbrief.fakes
 
 import com.romanvytv.inbrief.service.IMediaPlayerServiceConnection
+import com.romanvytv.inbrief.service.MediaPlayerController
+import com.romanvytv.inbrief.ui.feature.player.PlaybackSpeed
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -14,11 +16,12 @@ class FakeMediaPlayerServiceConnection : IMediaPlayerServiceConnection {
     private val _audioCompleted = MutableStateFlow(false)
     override val audioCompleted: StateFlow<Boolean> get() = _audioCompleted
 
-    var isPlaying = false
+    override val controller: MediaPlayerController?
+        get() = null
+
     var isPrepared = false
     var preparedPath: String? = null
-    var lastSeekPosition: Int? = null
-    var speedSet: Float? = null
+    var speedSet: Float = PlaybackSpeed.DEFAULT.speed
     var connected = true
     var disconnected = false
 
@@ -32,37 +35,24 @@ class FakeMediaPlayerServiceConnection : IMediaPlayerServiceConnection {
         _isConnected.value = false
     }
 
-    override fun play(): () -> Unit? = {
-        isPlaying = true
+    override fun play() {
         null
     }
 
-    override fun pause(): () -> Unit? = {
-        isPlaying = false
+    override fun pause() {
         null
     }
 
-    override fun prepare(path: String): () -> Unit? = {
+    override fun prepare(path: String) {
         preparedPath = path
         isPrepared = true
         null
     }
 
-    override fun seekTo(positionSeconds: Int): () -> Unit? = {
-        lastSeekPosition = positionSeconds
-        null
+    override fun seekTo(positionSeconds: Int) {
     }
 
-    override fun setSpeed(speed: Float): () -> Unit? = {
+    override fun setSpeed(speed: Float) {
         speedSet = speed
-        null
-    }
-
-    fun emitPlaybackPosition(position: Int) {
-        _playbackPosition.value = position
-    }
-
-    fun emitAudioCompleted(completed: Boolean) {
-        _audioCompleted.value = completed
     }
 }

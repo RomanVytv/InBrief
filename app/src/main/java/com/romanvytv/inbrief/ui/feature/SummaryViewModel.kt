@@ -1,13 +1,11 @@
 package com.romanvytv.inbrief.ui.feature
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.romanvytv.inbrief.ASSETS_PATH
 import com.romanvytv.inbrief.INTELLIGENT_INVESTOR_PATH
 import com.romanvytv.inbrief.data.repo.IBookSummaryRepository
 import com.romanvytv.inbrief.service.IMediaPlayerServiceConnection
-import com.romanvytv.inbrief.service.MediaPlayerServiceConnection
 import com.romanvytv.inbrief.ui.feature.chapters.ChaptersUiState
 import com.romanvytv.inbrief.ui.feature.player.PlayerUiState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -22,7 +20,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 import kotlin.math.roundToInt
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -70,7 +67,6 @@ class SummaryViewModel(
     private fun observeMediaServiceConnection() {
         viewModelScope.launch {
             mediaServiceConnection.isConnected.collect { connected ->
-                Log.d(TAG, "Media service connected: $connected")
                 _isMediaServiceConnected.value = connected
             }
         }
@@ -113,7 +109,6 @@ class SummaryViewModel(
                     _playerUiState.update { it.copy(progress = 0) }
 
                     val audioPath = "$bookSummaryPath/$audioName"
-                    Log.d(TAG, "Preparing audio: $audioPath")
                     mediaServiceConnection.prepare(audioPath)
                 }
         }
@@ -162,7 +157,6 @@ class SummaryViewModel(
     }
 
     fun seek(progress: Int) {
-        Log.d(TAG, "Seek to: $progress seconds")
         mediaServiceConnection.seekTo(progress)
     }
 
@@ -217,7 +211,6 @@ class SummaryViewModel(
     // endregion
 
     companion object {
-        private const val TAG = "SummaryViewModel"
         private const val SEEK_FORWARD_SECONDS = 10
         private const val SEEK_BACKWARD_SECONDS = 5
     }

@@ -6,13 +6,14 @@ interface IMediaPlayerServiceConnection {
     val isConnected: StateFlow<Boolean>
     val playbackPosition: StateFlow<Int>
     val audioCompleted: StateFlow<Boolean>
+     val controller: MediaPlayerController?
 
     fun connect()
     fun disconnect()
 
-    fun play(): () -> Unit?
-    fun pause(): () -> Unit?
-    fun prepare(path: String): () -> Unit?
-    fun seekTo(positionSeconds: Int): () -> Unit?
-    fun setSpeed(speed: Float): () -> Unit?
+    fun play()
+    fun pause()
+    fun prepare(path: String)
+    fun seekTo(positionSeconds: Int)
+    fun setSpeed(speed: Float)
 }
